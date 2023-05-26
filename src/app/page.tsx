@@ -221,35 +221,40 @@ export default function Home() {
                     className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400"
                   >
                     {header.isPlaceholder ? null : (
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? "cursor-pointer select-none"
-                            : "",
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
+                      <div className="flex items-center">
                         {header.column.getCanGroup() ? (
-                          // If the header can be grouped, let's add a toggle
-                          <button
-                            {...{
-                              onClick: header.column.getToggleGroupingHandler(),
-                              style: {
-                                cursor: "pointer",
-                              },
+                          <input
+                            type="checkbox"
+                            className="checked:bg-blue-500 mr-2"
+                            checked={header.column.getIsGrouped()}
+                            title="Group by this column"
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              header.column.getToggleGroupingHandler()();
                             }}
-                          >
-                            {header.column.getIsGrouped() ? `🛑` : `👊 `}
-                          </button>
-                        ) : null}{" "}
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}{" "}
-                        {{
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted() as string] ?? null}
+                          />
+                        ) : null}
+                        <div
+                          className={
+                            header.column.getCanSort()
+                              ? "cursor-pointer select-none"
+                              : "" + " flex items-center "
+                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // @ts-ignore
+                            header?.column?.getToggleSortingHandler()(e);
+                          }}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: " 🔼",
+                            desc: " 🔽",
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
                       </div>
                     )}
                   </th>
